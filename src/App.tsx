@@ -2,7 +2,9 @@ import { ChangeEvent, DragEvent, useState } from 'react';
 import './App.css';
 
 function App() {
-  const [uploadStatus, setUploadStatus] = useState<string>(''); // Track the upload status
+  const [uploadStatus, setUploadStatus] = useState<string>('');
+
+  const [fid, setFid] = useState<string>('');
 
   // Handle file selection or drop and trigger upload
   const handleFile = async (file: File) => {
@@ -19,6 +21,8 @@ function App() {
 
       if (response.ok) {
         const result = await response.json();
+        const fileId = result.data?.fid;
+        setFid(fileId);
         setUploadStatus('File uploaded successfully!');
         console.log('Upload response:', result);
       } else {
@@ -31,20 +35,17 @@ function App() {
     }
   };
 
-  // Trigger upload when a file is selected from the input
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) await handleFile(file);
   };
 
-  // Handle file drop from drag-and-drop
   const handleDrop = async (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     const file = event.dataTransfer.files[0];
     if (file) await handleFile(file);
   };
 
-  // Prevent default behavior to allow dropping files
   const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
     event.preventDefault();
   };
@@ -73,6 +74,8 @@ function App() {
       </div>
 
       {uploadStatus && <p>{uploadStatus}</p>}
+
+      {fid && <p>{fid}</p>}
     </>
   );
 }
