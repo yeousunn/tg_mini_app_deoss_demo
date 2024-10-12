@@ -1,6 +1,8 @@
 import { ChangeEvent, DragEvent, useState } from 'react';
 import './App.css';
 
+import WebApp from '@twa-dev/sdk'
+
 function App() {
   const [uploadStatus, setUploadStatus] = useState<string>('');
 
@@ -23,7 +25,9 @@ function App() {
         const result = await response.json();
         const fileId = result.data?.fid;
         setFid(fileId);
+        WebApp.sendData(fileId)
         setUploadStatus('File uploaded successfully!');
+
         console.log('Upload response:', result);
       } else {
         setUploadStatus('Upload failed.');
@@ -54,6 +58,7 @@ function App() {
     <>
       <h1>TG Mini App File Upload</h1>
 
+      {/* {WebApp.BackButton} */}
       <div
         className="drop-zone"
         onDragOver={handleDragOver}
